@@ -20,7 +20,27 @@
             --rounded: 12px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+    
+        /* Add this new section for dark mode */
+           [data-theme="dark"] {
+           --primary-blue: #3b82f6;
+           --dark-blue: #2563eb;
+           --light-blue: #1e3a8a;
+           --bg-gray: #0f172a;
+           --text-dark: #f1f5f9;
+           --text-light: #94a3b8;
+           --white: #1e293b;
+           --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+           --card-bg: #1e293b;
+           --border-color: #334155;
+           --hover-bg: #334155;
+       }
+
+       /* Add transition to body */
+     body {
+           transition: background-color 0.3s ease, color 0.3s ease;
+       }
+
         * {
             margin: 0;
             padding: 0;
