@@ -16,8 +16,9 @@
             --text-light: #64748b;
             --white: #ffffff;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --rounded: 8px;
-            --transition: all 0.3s ease;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --rounded: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         * {
@@ -27,10 +28,15 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
             background-color: var(--bg-gray);
             color: var(--text-dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
         .container {
@@ -48,29 +54,45 @@
             top: 0;
             z-index: 100;
             padding: 15px 0;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
         }
         
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
         
         .logo {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             color: var(--primary-blue);
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
         }
         
         .logo span {
             color: var(--text-dark);
         }
         
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
         nav ul {
             display: flex;
             list-style: none;
-            gap: 25px;
+            gap: 30px;
         }
         
         nav ul li a {
@@ -78,18 +100,44 @@
             color: var(--text-dark);
             font-weight: 500;
             transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
         }
         
         nav ul li a:hover {
             color: var(--primary-blue);
         }
         
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-blue);
+            transition: var(--transition);
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
         .contact-email {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             color: var(--text-light);
             font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: var(--bg-gray);
+            transition: var(--transition);
+        }
+        
+        .contact-email:hover {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
         }
         
         .contact-email i {
@@ -103,95 +151,204 @@
             font-size: 24px;
             color: var(--primary-blue);
             cursor: pointer;
+            padding: 8px;
+            transition: var(--transition);
+        }
+        
+        .mobile-menu-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background-color: var(--white);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            z-index: 99;
+        }
+        
+        .mobile-nav.active {
+            right: 0;
+        }
+        
+        .mobile-nav ul {
+            list-style: none;
+        }
+        
+        .mobile-nav ul li {
+            margin-bottom: 25px;
+        }
+        
+        .mobile-nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            padding: 10px 0;
+            transition: var(--transition);
+        }
+        
+        .mobile-nav ul li a:hover {
+            color: var(--primary-blue);
+            padding-left: 10px;
+        }
+        
+        .mobile-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 98;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overlay.active {
+            display: block;
+            opacity: 1;
         }
         
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
             color: var(--white);
-            padding: 80px 0;
+            padding: 100px 0 120px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
         
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             line-height: 1.2;
+            animation: fadeInUp 0.6s ease;
         }
         
         .hero p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             max-width: 700px;
-            margin: 0 auto 30px;
-            opacity: 0.9;
+            margin: 0 auto 35px;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease;
         }
         
         .cta-button {
             display: inline-block;
             background-color: var(--white);
             color: var(--primary-blue);
-            padding: 12px 30px;
+            padding: 14px 35px;
             border-radius: var(--rounded);
             text-decoration: none;
             font-weight: 600;
+            font-size: 16px;
             transition: var(--transition);
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1s ease;
         }
         
         .cta-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
         
         .tool-icons {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
             flex-wrap: wrap;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
         }
         
         .tool-icon {
-            background-color: rgba(255, 255, 255, 0.1);
-            width: 60px;
-            height: 60px;
+            background-color: rgba(255, 255, 255, 0.15);
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .tool-icon:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px) scale(1.1);
         }
         
         /* Search */
         .search-section {
-            padding: 30px 0;
-            background-color: var(--white);
-            margin-top: -40px;
-            border-radius: var(--rounded);
-            box-shadow: var(--shadow);
+            padding: 0;
+            background-color: transparent;
+            margin-top: -60px;
             position: relative;
             z-index: 10;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
         }
         
         .search-container {
-            padding: 0 20px;
+            background-color: var(--white);
+            border-radius: var(--rounded);
+            box-shadow: var(--shadow-lg);
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
         }
         
         .search-bar {
             display: flex;
-            max-width: 700px;
-            margin: 0 auto;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         
         .search-bar input {
             flex: 1;
-            padding: 15px 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--rounded) 0 0 var(--rounded);
+            padding: 16px 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--rounded);
             font-size: 16px;
             outline: none;
             transition: var(--transition);
@@ -199,35 +356,111 @@
         
         .search-bar input:focus {
             border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
         .search-bar button {
             background-color: var(--primary-blue);
             color: var(--white);
             border: none;
-            padding: 0 25px;
-            border-radius: 0 var(--rounded) var(--rounded) 0;
+            padding: 16px 30px;
+            border-radius: var(--rounded);
             cursor: pointer;
             transition: var(--transition);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .search-bar button:hover {
             background-color: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Search Results */
+        .search-results {
+            display: none;
+            background-color: var(--bg-gray);
+            border-radius: var(--rounded);
+            padding: 20px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .search-results::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .search-results::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .search-results::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
+        }
+        
+        .search-results h3 {
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+            font-size: 18px;
+        }
+        
+        .search-results ul {
+            list-style: none;
+        }
+        
+        .search-results ul li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: var(--transition);
+            border-radius: 8px;
+        }
+        
+        .search-results ul li:hover {
+            background-color: var(--white);
+        }
+        
+        .search-results ul li:last-child {
+            border-bottom: none;
+        }
+        
+        .search-results ul li a {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-results ul li a::before {
+            content: '🔧';
+            font-size: 18px;
+        }
+        
+        .search-results ul li a:hover {
+            color: var(--primary-blue);
         }
         
         /* Tools Sections */
         .tools-section {
-            padding: 60px 0;
+            padding: 80px 0;
         }
         
         .section-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease;
         }
         
         .section-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
             color: var(--text-dark);
         }
         
@@ -235,87 +468,160 @@
             color: var(--text-light);
             max-width: 600px;
             margin: 0 auto;
+            font-size: 1.1rem;
         }
         
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
         }
         
         .tool-card {
             background-color: var(--white);
             border-radius: var(--rounded);
-            padding: 25px;
+            padding: 30px;
             box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--light-blue));
+            transform: scaleX(0);
             transition: var(--transition);
         }
         
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+        
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
         }
         
         .tool-icon-container {
-            width: 50px;
-            height: 50px;
-            background-color: var(--light-blue);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
-            color: var(--primary-blue);
-            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--white);
+            font-size: 24px;
+            transition: var(--transition);
+        }
+        
+        .tool-card:hover .tool-icon-container {
+            transform: rotate(360deg) scale(1.1);
         }
         
         .tool-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--text-dark);
         }
         
         .tool-card p {
             color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
         }
         
         .tool-button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             background-color: var(--primary-blue);
             color: var(--white);
-            padding: 8px 20px;
+            padding: 10px 24px;
             border-radius: var(--rounded);
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .tool-button::after {
+            content: '→';
             transition: var(--transition);
         }
         
         .tool-button:hover {
             background-color: var(--dark-blue);
+            gap: 12px;
+        }
+        
+        .tool-button:hover::after {
+            transform: translateX(3px);
+        }
+        
+        /* Scroll to Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            z-index: 50;
+        }
+        
+        .scroll-top:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-5px);
+        }
+        
+        .scroll-top.visible {
+            display: flex;
         }
         
         /* Footer */
         footer {
             background-color: var(--text-dark);
             color: var(--white);
-            padding: 60px 0 30px;
+            padding: 70px 0 30px;
         }
         
         .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+            gap: 50px;
+            margin-bottom: 50px;
         }
         
         .footer-logo {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--white);
-            margin-bottom: 15px;
-            display: block;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        
+        .footer-logo:hover {
+            transform: scale(1.05);
         }
         
         .footer-logo span {
@@ -323,22 +629,29 @@
         }
         
         .footer-about p {
-            opacity: 0.8;
+            opacity: 0.85;
             margin-bottom: 20px;
             font-size: 0.95rem;
+            line-height: 1.7;
         }
         
         .footer-contact p {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 15px;
-            opacity: 0.8;
+            opacity: 0.85;
+            transition: var(--transition);
+        }
+        
+        .footer-contact p:hover {
+            opacity: 1;
+            color: var(--light-blue);
         }
         
         .footer-links h3 {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
             color: var(--light-blue);
         }
         
@@ -347,19 +660,21 @@
         }
         
         .footer-links ul li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         
         .footer-links ul li a {
             color: var(--white);
             text-decoration: none;
-            opacity: 0.8;
+            opacity: 0.85;
             transition: var(--transition);
+            display: inline-block;
         }
         
         .footer-links ul li a:hover {
             opacity: 1;
             color: var(--light-blue);
+            padding-left: 5px;
         }
         
         .footer-bottom {
@@ -369,73 +684,84 @@
             font-size: 0.9rem;
             opacity: 0.7;
         }
-
-        /* Search Results */
-        .search-results {
-            display: none;
-            background-color: var(--white);
-            border-radius: var(--rounded);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-top: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
-
-        .search-results h3 {
-            margin-bottom: 15px;
-            color: var(--primary-blue);
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        .search-results ul {
-            list-style: none;
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 0.8s linear infinite;
         }
-
-        .search-results ul li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .search-results ul li:last-child {
-            border-bottom: none;
-        }
-
-        .search-results ul li a {
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .search-results ul li a:hover {
-            color: var(--primary-blue);
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         /* Responsive */
         @media (max-width: 992px) {
             .hero h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
             }
             
             .tool-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 25px;
             }
         }
         
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 15px;
+            .contact-email {
+                display: none;
             }
             
-            nav ul {
-                gap: 15px;
+            nav {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-nav {
+                display: block;
             }
             
             .hero {
-                padding: 60px 0;
+                padding: 80px 0 100px;
             }
             
             .hero h1 {
@@ -446,61 +772,114 @@
                 font-size: 1rem;
             }
             
+            .cta-button {
+                padding: 12px 28px;
+                font-size: 15px;
+            }
+            
             .tool-icons {
                 gap: 20px;
             }
             
-            .search-section {
-                margin-top: -30px;
+            .tool-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
             }
             
-            .section-header h2 {
-                font-size: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .header-container {
-                flex-direction: row;
-                justify-content: space-between;
-            }
-            
-            nav {
-                display: none;
-            }
-            
-            .contact-email {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
+            .search-container {
+                padding: 25px 20px;
             }
             
             .search-bar {
                 flex-direction: column;
-            }
-            
-            .search-bar input {
-                border-radius: var(--rounded);
-                margin-bottom: 10px;
+                gap: 12px;
             }
             
             .search-bar button {
-                border-radius: var(--rounded);
-                padding: 15px;
+                justify-content: center;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .tools-section {
+                padding: 60px 0;
             }
             
             .tools-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .scroll-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
             }
             
             .footer-container {
                 grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            header {
+                padding: 12px 0;
+            }
+            
+            .logo {
+                font-size: 22px;
+            }
+            
+            .hero {
+                padding: 60px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero p {
+                font-size: 0.95rem;
+            }
+            
+            .search-section {
+                margin-top: -50px;
+            }
+            
+            .search-container {
+                padding: 20px 15px;
+            }
+            
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+            
+            .section-header p {
+                font-size: 0.95rem;
+            }
+            
+            .tool-card {
+                padding: 25px 20px;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            header, .hero, .search-section, .scroll-top, footer {
+                display: none;
+            }
+            
+            .tools-section {
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -524,37 +903,58 @@
                 <span>yashkale823@gmail.com</span>
             </div>
             
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </header>
     
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-close" id="mobileClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li>
+                <div class="contact-email">
+                    <i class="fas fa-envelope"></i>
+                    <span>yashkale823@gmail.com</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>Your Daily Tools, All in One Place</h1>
-            <p>Convert, calculate, compress, and simplify your everyday tasks — fast and free.</p>
-            <a href="#tools" class="cta-button">Explore Tools</a>
-            
-            <div class="tool-icons">
-                <div class="tool-icon">
-                    <i class="fas fa-image"></i>
-                </div>
-                <div class="tool-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div class="tool-icon">
-                    <i class="fas fa-calculator"></i>
-                </div>
-                <div class="tool-icon">
-                    <i class="fas fa-font"></i>
-                </div>
-                <div class="tool-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <div class="tool-icon">
-                    <i class="fas fa-video"></i>
+            <div class="hero-content">
+                <h1>Your Daily Tools, All in One Place</h1>
+                <p>Convert, calculate, compress, and simplify your everyday tasks — fast and free.</p>
+                <a href="#tools" class="cta-button">Explore Tools</a>
+                
+                <div class="tool-icons">
+                    <div class="tool-icon" title="Image Tools">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="tool-icon" title="Document Tools">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="tool-icon" title="Calculator Tools">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="tool-icon" title="Text Tools">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <div class="tool-icon" title="Developer Tools">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="tool-icon" title="Color Tools">
+                        <i class="fas fa-palette"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -562,16 +962,21 @@
     
     <!-- Search Section -->
     <section class="search-section">
-        <div class="search-container">
-            <div class="search-bar">
-                <input type="text" placeholder="Search a tool..." id="searchInput">
-                <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
-            </div>
-            <div class="search-results" id="searchResults">
-                <h3>Search Results</h3>
-                <ul id="resultsList">
-                    <!-- Results will be populated here -->
-                </ul>
+        <div class="container">
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for a tool..." id="searchInput" aria-label="Search tools">
+                    <button type="submit" id="searchButton">
+                        <i class="fas fa-search"></i>
+                        <span>Search</span>
+                    </button>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <h3>Search Results</h3>
+                    <ul id="resultsList">
+                        <!-- Results will be populated here -->
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -585,7 +990,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="image">
                     <div class="tool-icon-container">
                         <i class="fas fa-exchange-alt"></i>
                     </div>
@@ -594,7 +999,7 @@
                     <a href="image-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="image">
                     <div class="tool-icon-container">
                         <i class="fas fa-compress-alt"></i>
                     </div>
@@ -603,7 +1008,7 @@
                     <a href="image-compressor.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="image">
                     <div class="tool-icon-container">
                         <i class="fas fa-expand-alt"></i>
                     </div>
@@ -612,7 +1017,7 @@
                     <a href="image-resizer.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="image">
                     <div class="tool-icon-container">
                         <i class="fas fa-crop-alt"></i>
                     </div>
@@ -621,7 +1026,7 @@
                     <a href="image-crop.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="image">
                     <div class="tool-icon-container">
                         <i class="fas fa-font"></i>
                     </div>
@@ -630,7 +1035,7 @@
                     <a href="image-to-text.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="image">
                     <div class="tool-icon-container">
                         <i class="fas fa-sync-alt"></i>
                     </div>
@@ -651,7 +1056,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="document">
                     <div class="tool-icon-container">
                         <i class="fas fa-file-pdf"></i>
                     </div>
@@ -660,7 +1065,7 @@
                     <a href="pdf-to-word.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="document">
                     <div class="tool-icon-container">
                         <i class="fas fa-file-archive"></i>
                     </div>
@@ -669,7 +1074,7 @@
                     <a href="pdf-compressor.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="document">
                     <div class="tool-icon-container">
                         <i class="fas fa-cut"></i>
                     </div>
@@ -678,7 +1083,7 @@
                     <a href="pdf-merger-splitter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="document">
                     <div class="tool-icon-container">
                         <i class="fas fa-exchange-alt"></i>
                     </div>
@@ -687,7 +1092,7 @@
                     <a href="document-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="document">
                     <div class="tool-icon-container">
                         <i class="fas fa-lock"></i>
                     </div>
@@ -696,7 +1101,7 @@
                     <a href="pdf-lock-unlock.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="document">
                     <div class="tool-icon-container">
                         <i class="fas fa-signature"></i>
                     </div>
@@ -717,7 +1122,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="calculator">
                     <div class="tool-icon-container">
                         <i class="fas fa-square-root-alt"></i>
                     </div>
@@ -726,7 +1131,7 @@
                     <a href="scientific-calculator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="calculator">
                     <div class="tool-icon-container">
                         <i class="fas fa-birthday-cake"></i>
                     </div>
@@ -735,7 +1140,7 @@
                     <a href="age-calculator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="calculator">
                     <div class="tool-icon-container">
                         <i class="fas fa-weight"></i>
                     </div>
@@ -744,7 +1149,7 @@
                     <a href="bmi-calculator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="calculator">
                     <div class="tool-icon-container">
                         <i class="fas fa-home"></i>
                     </div>
@@ -753,7 +1158,7 @@
                     <a href="loan-emi-calculator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="calculator">
                     <div class="tool-icon-container">
                         <i class="fas fa-percentage"></i>
                     </div>
@@ -762,7 +1167,7 @@
                     <a href="gst-calculator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="calculator">
                     <div class="tool-icon-container">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
@@ -783,7 +1188,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="text">
                     <div class="tool-icon-container">
                         <i class="fas fa-text-height"></i>
                     </div>
@@ -792,7 +1197,7 @@
                     <a href="text-case-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="text">
                     <div class="tool-icon-container">
                         <i class="fas fa-sort-amount-down"></i>
                     </div>
@@ -801,7 +1206,7 @@
                     <a href="word-character-counter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="text">
                     <div class="tool-icon-container">
                         <i class="fas fa-filter"></i>
                     </div>
@@ -810,7 +1215,7 @@
                     <a href="remove-duplicate-lines.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="text">
                     <div class="tool-icon-container">
                         <i class="fas fa-sort-alpha-down"></i>
                     </div>
@@ -819,7 +1224,7 @@
                     <a href="text-shortener.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="text">
                     <div class="tool-icon-container">
                         <i class="fas fa-undo"></i>
                     </div>
@@ -828,7 +1233,7 @@
                     <a href="text-reverse.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="text">
                     <div class="tool-icon-container">
                         <i class="fas fa-lock"></i>
                     </div>
@@ -849,7 +1254,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="developer">
                     <div class="tool-icon-container">
                         <i class="fas fa-file-code"></i>
                     </div>
@@ -858,7 +1263,7 @@
                     <a href="html-minifier.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="developer">
                     <div class="tool-icon-container">
                         <i class="fas fa-brackets-curly"></i>
                     </div>
@@ -867,7 +1272,7 @@
                     <a href="json-formatter-validator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="developer">
                     <div class="tool-icon-container">
                         <i class="fas fa-key"></i>
                     </div>
@@ -876,7 +1281,7 @@
                     <a href="base64-encoder-decoder.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="developer">
                     <div class="tool-icon-container">
                         <i class="fas fa-link"></i>
                     </div>
@@ -885,7 +1290,7 @@
                     <a href="url-encoder-decoder.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="developer">
                     <div class="tool-icon-container">
                         <i class="fas fa-palette"></i>
                     </div>
@@ -894,9 +1299,9 @@
                     <a href="color-picker-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="developer">
                     <div class="tool-icon-container">
-                        <i class="fas fa-regex"></i>
+                        <i class="fas fa-search"></i>
                     </div>
                     <h3>Regex Tester</h3>
                     <p>Test and debug regular expressions in real-time</p>
@@ -915,7 +1320,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="color">
                     <div class="tool-icon-container">
                         <i class="fas fa-eye-dropper"></i>
                     </div>
@@ -924,7 +1329,7 @@
                     <a href="color-picker-image.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="color">
                     <div class="tool-icon-container">
                         <i class="fas fa-exchange-alt"></i>
                     </div>
@@ -933,7 +1338,7 @@
                     <a href="hex-rgb-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="color">
                     <div class="tool-icon-container">
                         <i class="fas fa-sliders-h"></i>
                     </div>
@@ -942,7 +1347,7 @@
                     <a href="gradient-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="color">
                     <div class="tool-icon-container">
                         <i class="fas fa-adjust"></i>
                     </div>
@@ -951,7 +1356,7 @@
                     <a href="contrast-checker.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="color">
                     <div class="tool-icon-container">
                         <i class="fas fa-swatchbook"></i>
                     </div>
@@ -960,7 +1365,7 @@
                     <a href="palette-generator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="color">
                     <div class="tool-icon-container">
                         <i class="fas fa-low-vision"></i>
                     </div>
@@ -973,15 +1378,15 @@
     </section>
 
     <!-- SEO & Marketing Tools Section -->
-    <section class="tools-section" style="background-color: #f1f5f9;">
+    <section class="tools-section">
         <div class="container">
             <div class="section-header">
-                <h2>🌍 SEO & Marketing Tools</h2>
+                <h2>📊 SEO & Marketing Tools</h2>
                 <p>Optimize your content and analyze your website performance</p>
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="seo">
                     <div class="tool-icon-container">
                         <i class="fas fa-key"></i>
                     </div>
@@ -990,16 +1395,16 @@
                     <a href="keyword-density-checker.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="seo">
                     <div class="tool-icon-container">
                         <i class="fas fa-tags"></i>
                     </div>
                     <h3>Meta Tag Analyzer</h3>
                     <p>Check and analyze meta tags for SEO optimization</p>
-                    <a href="meta-tag-analyzer.html"class="tool-button">Use Tool</a>
+                    <a href="meta-tag-analyzer.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="seo">
                     <div class="tool-icon-container">
                         <i class="fas fa-font"></i>
                     </div>
@@ -1012,7 +1417,7 @@
     </section>
 
     <!-- Utility Tools Section -->
-    <section class="tools-section">
+    <section class="tools-section" style="background-color: #f1f5f9;">
         <div class="container">
             <div class="section-header">
                 <h2>🛠️ Utility Tools</h2>
@@ -1020,7 +1425,7 @@
             </div>
             
             <div class="tools-grid">
-                <div class="tool-card">
+                <div class="tool-card" data-category="utility">
                     <div class="tool-icon-container">
                         <i class="fas fa-qrcode"></i>
                     </div>
@@ -1029,7 +1434,7 @@
                     <a href="qr-code-generator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="utility">
                     <div class="tool-icon-container">
                         <i class="fas fa-barcode"></i>
                     </div>
@@ -1038,7 +1443,7 @@
                     <a href="barcode-generator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="utility">
                     <div class="tool-icon-container">
                         <i class="fas fa-fingerprint"></i>
                     </div>
@@ -1047,7 +1452,7 @@
                     <a href="uuid-generator.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="utility">
                     <div class="tool-icon-container">
                         <i class="fas fa-ruler-combined"></i>
                     </div>
@@ -1056,7 +1461,7 @@
                     <a href="unit-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="utility">
                     <div class="tool-icon-container">
                         <i class="fas fa-globe"></i>
                     </div>
@@ -1065,7 +1470,7 @@
                     <a href="time-zone-converter.html" class="tool-button">Use Tool</a>
                 </div>
                 
-                <div class="tool-card">
+                <div class="tool-card" data-category="utility">
                     <div class="tool-icon-container">
                         <i class="fas fa-random"></i>
                     </div>
@@ -1077,13 +1482,18 @@
         </div>
     </section>
     
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
     <!-- Footer -->
     <footer id="contact">
         <div class="container">
             <div class="footer-container">
                 <div class="footer-about">
                     <a href="#" class="footer-logo">Tools<span>Wonder</span></a>
-                    <p>Simplifying your digital life with powerful, easy-to-use tools for all your needs.</p>
+                    <p>Simplifying your digital life with powerful, easy-to-use tools for all your needs. Fast, free, and always accessible.</p>
                 </div>
                 
                 <div class="footer-contact">
@@ -1109,82 +1519,165 @@
     </footer>
     
     <script>
-        // Mobile menu toggle functionality
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            const nav = document.querySelector('nav');
-            nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileClose = document.getElementById('mobileClose');
+        const overlay = document.getElementById('overlay');
+        
+        function openMobileMenu() {
+            mobileNav.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        mobileClose.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
         });
         
         // Search functionality
-        document.getElementById('searchButton').addEventListener('click', function() {
-            performSearch();
-        });
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const searchResults = document.getElementById('searchResults');
+        const resultsList = document.getElementById('resultsList');
         
-        // Also search when Enter key is pressed
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            resultsList.innerHTML = '';
+            
+            if (searchTerm === '') {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            const toolCards = document.querySelectorAll('.tool-card');
+            let foundResults = [];
+            
+            toolCards.forEach(card => {
+                const toolName = card.querySelector('h3').textContent.toLowerCase();
+                const toolDesc = card.querySelector('p').textContent.toLowerCase();
+                const category = card.getAttribute('data-category');
+                
+                if (toolName.includes(searchTerm) || toolDesc.includes(searchTerm) || category.includes(searchTerm)) {
+                    foundResults.push({
+                        name: card.querySelector('h3').textContent,
+                        element: card
+                    });
+                }
+            });
+            
+            if (foundResults.length > 0) {
+                foundResults.forEach(result => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.textContent = result.name;
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        result.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        result.element.style.boxShadow = '0 0 0 4px var(--primary-blue)';
+                        setTimeout(() => {
+                            result.element.style.boxShadow = 'var(--shadow)';
+                        }, 2000);
+                        searchResults.style.display = 'none';
+                        searchInput.value = '';
+                    };
+                    listItem.appendChild(link);
+                    resultsList.appendChild(listItem);
+                });
+                searchResults.style.display = 'block';
+            } else {
+                const listItem = document.createElement('li');
+                listItem.textContent = 'No tools found matching your search.';
+                listItem.style.textAlign = 'center';
+                listItem.style.color = 'var(--text-light)';
+                resultsList.appendChild(listItem);
+                searchResults.style.display = 'block';
+            }
+        }
+        
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 performSearch();
             }
         });
         
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const resultsContainer = document.getElementById('searchResults');
-            const resultsList = document.getElementById('resultsList');
-            
-            // Clear previous results
-            resultsList.innerHTML = '';
-            
-            if (searchTerm.trim() === '') {
-                resultsContainer.style.display = 'none';
-                return;
-            }
-            
-            // Get all tool cards
-            const toolCards = document.querySelectorAll('.tool-card');
-            let foundResults = false;
-            
-            toolCards.forEach(card => {
-                const toolName = card.querySelector('h3').textContent.toLowerCase();
-                const toolDesc = card.querySelector('p').textContent.toLowerCase();
-                
-                if (toolName.includes(searchTerm) || toolDesc.includes(searchTerm)) {
-                    foundResults = true;
-                    const listItem = document.createElement('li');
-                    const link = document.createElement('a');
-                    link.href = '#' + card.closest('.tools-section').id;
-                    link.textContent = toolName;
-                    link.onclick = function() {
-                        // Scroll to the tool section
-                        card.scrollIntoView({ behavior: 'smooth' });
-                        // Highlight the card
-                        card.style.boxShadow = '0 0 0 3px var(--primary-blue)';
-                        setTimeout(() => {
-                            card.style.boxShadow = 'var(--shadow)';
-                        }, 2000);
-                        resultsContainer.style.display = 'none';
-                    };
-                    listItem.appendChild(link);
-                    resultsList.appendChild(listItem);
-                }
-            });
-            
-            if (foundResults) {
-                resultsContainer.style.display = 'block';
-            } else {
-                const listItem = document.createElement('li');
-                listItem.textContent = 'No tools found matching your search.';
-                resultsList.appendChild(listItem);
-                resultsContainer.style.display = 'block';
-            }
-        }
-        
         // Close search results when clicking outside
         document.addEventListener('click', function(event) {
             const searchContainer = document.querySelector('.search-container');
-            if (!searchContainer.contains(event.target)) {
-                document.getElementById('searchResults').style.display = 'none';
+            if (searchContainer && !searchContainer.contains(event.target)) {
+                searchResults.style.display = 'none';
             }
+        });
+        
+        // Scroll to top functionality
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '#home') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+        
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
         });
     </script>
 </body>
